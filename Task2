@@ -1,0 +1,61 @@
+#include <iostream>
+#include <thread>
+#include <chrono>
+#include <random>
+
+using namespace std;
+
+class VehicleData {
+public:
+    int speed;
+    int fuelLevel;
+    int engineTemperature;
+
+    // Constructor to initialize vehicle data
+    VehicleData() : speed(0), fuelLevel(100), engineTemperature(70) {}
+
+    // Randomly update vehicle data
+    void updateData() {
+        random_device rd;
+        mt19937 gen(rd());
+        uniform_int_distribution<> speedDist(0, 200);
+        uniform_int_distribution<> fuelDist(0, 100);
+        uniform_int_distribution<> tempDist(60, 120);
+
+        speed = speedDist(gen);
+        fuelLevel = fuelDist(gen);
+        engineTemperature = tempDist(gen);
+    }
+
+    // Display vehicle data with warnings
+    void displayData() {
+        cout << "Speed: " << speed << " km/h, Fuel: " << fuelLevel << "%, Temperature: " << engineTemperature << "°C" << endl;
+
+        // Display warnings if thresholds are exceeded
+        if (engineTemperature > 100) {
+            cout << "Warning: High engine temperature!" << endl;
+        }
+        if (fuelLevel < 10) {
+            cout << "Warning: Low fuel level!" << endl;
+        }
+    }
+};
+
+void updateAndDisplay(VehicleData& data) {
+    while (true) {
+        data.updateData();
+        data.displayData();
+        this_thread::sleep_for(chrono::seconds(1)); // Update every second
+    }
+}
+
+int main() {
+    VehicleData vehicleData;
+    thread dataThread(updateAndDisplay, ref(vehicleData));
+
+    // Let the simulation run for 10 seconds, then exit
+    this_thread::sleep_for(chrono::seconds(10));
+    dataThread.detach(); // Detach thread to avoid blocking
+
+    return 0;
+}
