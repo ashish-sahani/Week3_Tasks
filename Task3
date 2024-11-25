@@ -1,0 +1,64 @@
+#include <iostream>
+#include <queue>
+#include <cstdlib>
+#include <ctime>
+
+using namespace std;
+
+enum EventType { TAP, SWIPE };
+
+class Event {
+public:
+    EventType eventType;
+    int x, y;
+    string timestamp;
+
+    Event(EventType type, int xPos, int yPos, const string& time)
+        : eventType(type), x(xPos), y(yPos), timestamp(time) {}
+};
+
+class EventQueue {
+public:
+    queue<Event> eventQueue;
+
+    // Add an event to the queue
+    void addEvent(Event event) {
+        eventQueue.push(event);
+    }
+
+    // Process events from the queue
+    void processEvents() {
+        while (!eventQueue.empty()) {
+            Event event = eventQueue.front();
+            eventQueue.pop();
+
+            // Handle different types of events
+            if (event.eventType == TAP) {
+                cout << "Tap detected at (" << event.x << ", " << event.y << ") at " << event.timestamp << endl;
+            } else if (event.eventType == SWIPE) {
+                string direction = (event.y > 0) ? "Up" : "Down";
+                cout << "Swipe detected: " << direction << " direction at (" << event.x << ", " << event.y << ") at " << event.timestamp << endl;
+            }
+        }
+    }
+};
+
+int main() {
+    srand(time(0));
+    EventQueue queue;
+
+    // Simulating random events
+    for (int i = 0; i < 5; ++i) {
+        int x = rand() % 100;
+        int y = rand() % 100;
+        string time = "12:30:00";
+        EventType type = (rand() % 2 == 0) ? TAP : SWIPE;
+
+        queue.addEvent(Event(type, x, y, time));
+    }
+
+    // Process events
+    queue.processEvents();
+
+    return 0;
+}
