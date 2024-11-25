@@ -1,0 +1,93 @@
+#include <iostream>
+#include <vector>
+#include <string>
+
+using namespace std;
+
+// MenuItem class to represent each menu item
+class MenuItem {
+public:
+    string name;
+    vector<MenuItem> subMenuItems;
+
+    // Constructor to initialize menu item with a name
+    MenuItem(string itemName) : name(itemName) {}
+
+    // Add sub-menu items
+    void addSubMenuItem(MenuItem item) {
+        subMenuItems.push_back(item);
+    }
+};
+
+// Menu class for handling menu navigation
+class Menu {
+public:
+    MenuItem rootMenu;
+    MenuItem* currentMenu;
+
+    // Constructor to initialize the root menu
+    Menu(MenuItem root) : rootMenu(root), currentMenu(&rootMenu) {}
+
+    // Function to display the current menu options
+    void displayMenu() {
+        cout << "Current Menu: " << currentMenu->name << endl;
+        for (int i = 0; i < currentMenu->subMenuItems.size(); ++i) {
+            cout << i + 1 << ". " << currentMenu->subMenuItems[i].name << endl;
+        }
+    }
+
+    // Navigate down to the selected sub-menu
+    void navigateDown(int choice) {
+        if (choice > 0 && choice <= currentMenu->subMenuItems.size()) {
+            currentMenu = &currentMenu->subMenuItems[choice - 1];
+        } else {
+            cout << "Invalid choice!" << endl;
+        }
+    }
+
+    // Navigate up to the parent menu
+    void navigateUp() {
+        currentMenu = &rootMenu;
+    }
+};
+
+int main() {
+    // Create menu items and submenus
+    MenuItem mainMenu("Main Menu");
+    MenuItem settings("Settings");
+    MenuItem displaySettings("Display Settings");
+    MenuItem audioSettings("Audio Settings");
+    MenuItem media("Media");
+    MenuItem radio("Radio");
+    MenuItem bluetoothAudio("Bluetooth Audio");
+
+    // Build menu hierarchy
+    settings.addSubMenuItem(displaySettings);
+    settings.addSubMenuItem(audioSettings);
+    media.addSubMenuItem(radio);
+    media.addSubMenuItem(bluetoothAudio);
+
+    mainMenu.addSubMenuItem(settings);
+    mainMenu.addSubMenuItem(media);
+
+    // Create Menu object
+    Menu menu(mainMenu);
+
+    int choice;
+    while (true) {
+        menu.displayMenu();
+
+        cout << "Enter your choice (1-4 for down, 5 for up, 0 to exit): ";
+        cin >> choice;
+
+        if (choice == 0) {
+            break;
+        } else if (choice == 5) {
+            menu.navigateUp();
+        } else {
+            menu.navigateDown(choice);
+        }
+    }
+
+    return 0;
+}
