@@ -1,59 +1,56 @@
 #include <iostream>
+#include <string>
 #include <map>
-
+ 
 using namespace std;
-
+ 
+// class to represent a theme with background color, font color, font size, and icon style
 class Theme {
 public:
     string backgroundColor;
     string fontColor;
-    int fontSize;
+    string fontSize;
     string iconStyle;
-
-    Theme(string bg, string font, int size, string icon)
-        : backgroundColor(bg), fontColor(font), fontSize(size), iconStyle(icon) {}
-
-    void applyTheme() const {
-        cout << "Applying Theme:" << endl;
-        cout << "Background: " << backgroundColor << ", Font: " << fontColor << ", Font Size: " << fontSize << ", Icon Style: " << iconStyle << endl;
-    }
-
-    void previewTheme() const {
-        cout << "Previewing Theme:" << endl;
-        cout << "Background: " << backgroundColor << ", Font: " << fontColor << ", Font Size: " << fontSize << ", Icon Style: " << iconStyle << endl;
+ 
+    // constructor with arguments to initialize theme properties
+    Theme(string bgColor, string fontColor, string fontSize, string iconStyle)
+        : backgroundColor(bgColor), fontColor(fontColor), fontSize(fontSize), iconStyle(iconStyle) {}
+ 
+    // default constructor initializes with default values
+    Theme()
+        : backgroundColor("White"), fontColor("Black"), fontSize("12"), iconStyle("Default") {}
+ 
+    // function to apply the theme (print theme details)
+    void apply() {
+        cout << "Applying Theme: \n";
+        cout << "Background Color: " << backgroundColor << endl;
+        cout << "Font Color: " << fontColor << endl;
+        cout << "Font Size: " << fontSize << endl;
+        cout << "Icon Style: " << iconStyle << endl;
     }
 };
-
+ 
 int main() {
-    map<string, Theme> themes;
-    themes["Classic"] = Theme("Black", "White", 12, "Classic Icons");
-    themes["Sport"] = Theme("Red", "White", 14, "Sport Icons");
-    themes["Eco"] = Theme("Green", "Black", 12, "Eco Icons");
-
-    int choice;
-    while (true) {
-        cout << "Choose Theme:" << endl;
-        cout << "1. Classic" << endl;
-        cout << "2. Sport" << endl;
-        cout << "3. Eco" << endl;
-        cout << "Enter your choice (0 to exit): ";
-        cin >> choice;
-
-        if (choice == 0) {
-            break;
-        } else if (choice == 1) {
-            themes["Classic"].previewTheme();
-            themes["Classic"].applyTheme();
-        } else if (choice == 2) {
-            themes["Sport"].previewTheme();
-            themes["Sport"].applyTheme();
-        } else if (choice == 3) {
-            themes["Eco"].previewTheme();
-            themes["Eco"].applyTheme();
-        } else {
-            cout << "Invalid choice!" << endl;
-        }
+    map<string, Theme> themes;  // map to store themes by name
+ 
+    // adding predefined themes to the map
+    themes["Classic"] = Theme("White", "Black", "12", "Default");
+    themes["Sport"] = Theme("Red", "White", "14", "Bold");
+    themes["Eco"] = Theme("Green", "Black", "12", "Simple");
+ 
+    // prompt user to choose a theme
+    string themeChoice;
+    cout << "Choose a theme: Classic, Sport, or Eco: ";
+    cin >> themeChoice;
+ 
+    // check if the chosen theme exists in the map and apply it
+    if (themes.find(themeChoice) != themes.end()) {
+        cout << themeChoice << " Theme: \n";
+        themes[themeChoice].apply();
+    } else {
+        cout << "Invalid theme choice!" << endl;  // handle invalid input
     }
-
+ 
     return 0;
 }
+ 
